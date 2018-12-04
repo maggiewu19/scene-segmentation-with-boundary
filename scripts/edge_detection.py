@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import time 
 from matplotlib import pyplot as plt
+from PIL import Image
 
 IMG_DIR = '../images/'
 
@@ -12,6 +13,7 @@ NEW_DIR = 'new/'
 PURE_DARKEN_DIR = 'pure_darken/'
 DARKEN_KERNEL_DIR = 'darken_kernel/'
 KERNEL_DARKEN_DIR = 'kernel_darken/'
+CONTRAST_DIR = 'contrast/'
 
 # white: 255
 # black: 0 
@@ -78,17 +80,25 @@ def saveImage(filename, img):
     cv2.imwrite(IMG_DIR + filename, img)
     
 
+# applied filter and save new image
 def saveAllImages(filename):
     img = loadImage(IMG_DIR + ORIGINAL_DIR + filename)
+    
     new_img = updateImage(IMG_DIR + ORIGINAL_DIR + filename, (-1, 1))
     darken_img = updateImage(IMG_DIR + ORIGINAL_DIR + filename, (-1, 1), darken=True)
     kernel_img = sharpenImage(IMG_DIR + ORIGINAL_DIR + filename)
     pure_darken_img = updateImage(IMG_DIR + ORIGINAL_DIR + filename, (0, 1), darken=True)
+    contrast_50_img = changeContrast(IMG_DIR + ORIGINAL_DIR + filename, 50)
+    contrast_100_img = changeContrast(IMG_DIR + ORIGINAL_DIR + filename, 100)
 
     saveImage(IMG_DIR + NEW_DIR + 'new_' + filename, new_img)
+    saveImage(IMG_DIR + BLUR_DIR + 'blur_' + filename, blur_img)
     saveImage(IMG_DIR + DARKEN_DIR + 'darken_' + filename, darken_img)
     saveImage(IMG_DIR + KERNEL_DIR + 'kernel_' + filename, kernel_img)
     saveImage(IMG_DIR + PURE_DARKEN_DIR + 'pure_darken_' + filename, pure_darken_img)
+    saveImage(IMG_DIR + CONTRAST_DIR + 'contrast_50_' + filename, np.array(contrast_50_img))
+    saveImage(IMG_DIR + CONTRAST_DIR + 'contrast_100_' + filename, np.array(contrast_100_img))
+
 
     kernel_darken_img = updateImage(IMG_DIR + KERNEL_DIR + 'kernel_' + filename, (0, 1), darken=True)
     darken_kernel_img = sharpenImage(IMG_DIR + PURE_DARKEN_DIR + 'pure_darken_' + filename)
@@ -96,10 +106,21 @@ def saveAllImages(filename):
     saveImage(IMG_DIR + KERNEL_DARKEN_DIR + 'kernel_darken_' + filename, kernel_darken_img)
     saveImage(IMG_DIR + DARKEN_KERNEL_DIR + 'darken_kernel_' + filename, darken_kernel_img)
 
+def changeContrast(img, level):
+    img = Image.open(img)
+    factor = (259 * (level + 255)) / (255 * (259 - level))
+    def contrast(c):
+        value = 128 + factor * (c - 128)
+        return max(0, min(255, value))
+    return img.point(contrast)
+
 if __name__ == '__main__': 
-    images = ['shells.png', 'plane.png', 'wine.png', 'room.png', 'lot.png']
+    images = ['bedroom.jpg', 'classroom.jpg', 'dentist_office.jpg', 'elevator.jpg',
+              'lot.png', 'room.png', 'ice_skating.jpg', 'kitchen.jpg', 'lake.jpg',
+              'movie_theater.jpg', 'sail.jpg', 'office.jpg']
 
     for img in images: 
         saveAllImages(img)
+        print ("finish", img)
 
 
