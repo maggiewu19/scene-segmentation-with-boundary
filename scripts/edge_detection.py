@@ -76,6 +76,7 @@ def sharpenImage(filename):
 
 def saveImage(filename, img):
     cv2.imwrite(IMG_DIR + filename, img)
+    
 
 def saveAllImages(filename):
     img = loadImage(IMG_DIR + ORIGINAL_DIR + filename)
