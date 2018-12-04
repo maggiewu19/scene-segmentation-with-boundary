@@ -64,13 +64,17 @@ if __name__ == '__main__':
     wine = loadImage(IMG_DIR + 'wine.png')
     new_wine = updateImage(IMG_DIR + 'wine.png')
 
-    test = loadImage(IMG_DIR + 'test.jpg')
-    new_test = updateImage(IMG_DIR + 'test.jpg')
+    test = loadImage(IMG_DIR + 'test.png')
+    new_test = updateImage(IMG_DIR + 'test.png')
+
+    room = loadImage(IMG_DIR + 'room.png')
+    new_room = updateImage(IMG_DIR + 'room.png')
 
     saveImage('new_shells.png', new_shells)
     saveImage('new_plane.png', new_plane)
     saveImage('new_test.png', new_test)
     saveImage('new_wine.png', new_wine)
+    saveImage('new_room.png', new_room)
 
 
 
