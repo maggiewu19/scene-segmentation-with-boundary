@@ -37,7 +37,6 @@ def loopPixels(edges, image):
         x, y = index
         if pixel == 255: 
             color = tuple(image[x, y])
-            color = (0, 0, 0)
             global_results.update(updateColors(x, y, color))
 
     return global_results
