@@ -20,15 +20,15 @@ def loadImage(filename):
     return cv2.imread(filename, 1)
 
 def getEdges(img):
-    return cv2.Canny(img, 100, 200)
+    return cv2.Canny(img, 200, 200)
 
 def loopPixels(edges, image): 
     def updateColors(x, y, color): 
         results = set() 
-        for i in range(x-1, x+2): 
-            for j in range(y-1, y+2): 
+        for i in range(x-1, x+1): 
+            for j in range(y-1, y+1): 
                 if 0 <= i < len(image) and 0 <= j < len(image[0]):
-                    results.add((i, j))
+                    results.add((i, j, color))
 
         return results 
 
@@ -36,7 +36,8 @@ def loopPixels(edges, image):
     for index, pixel in np.ndenumerate(edges):
         x, y = index
         if pixel == 255: 
-            color = image[x, y] 
+            color = tuple(image[x, y])
+            color = (0, 0, 0)
             global_results.update(updateColors(x, y, color))
 
     return global_results
@@ -46,8 +47,8 @@ def updateImage(filename):
     edges = getEdges(img)
 
     results = loopPixels(edges, img)
-    for (i, j) in results: 
-        img[i,j] = 0 
+    for (i, j, color) in results: 
+        img[i,j] = color
 
     return img 
 
@@ -75,6 +76,7 @@ if __name__ == '__main__':
     saveImage('new_test.png', new_test)
     saveImage('new_wine.png', new_wine)
     saveImage('new_room.png', new_room)
+
 
 
 
