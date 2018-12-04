@@ -5,6 +5,14 @@ from matplotlib import pyplot as plt
 
 IMG_DIR = '../images/'
 
+ORIGINAL_DIR = 'original/'
+DARKEN_DIR = 'darken/'
+KERNEL_DIR = 'kernel/'
+NEW_DIR = 'new/'
+PURE_DARKEN_DIR = 'pure_darken/'
+DARKEN_KERNEL_DIR = 'darken_kernel/'
+KERNEL_DARKEN_DIR = 'kernel_darken/'
+
 # white: 255
 # black: 0 
 
@@ -22,11 +30,13 @@ def loadImage(filename):
 def getEdges(img):
     return cv2.Canny(img, 200, 200)
 
-def loopPixels(edges, image): 
+def loopPixels(edges, image, size, darken): 
     def updateColors(x, y, color): 
         results = set() 
-        for i in range(x-1, x+1): 
-            for j in range(y-1, y+1): 
+        x_range = range(x+size[0], x+size[1])
+        y_range = range(y+size[0], y+size[1])
+        for i in x_range: 
+            for j in y_range: 
                 if 0 <= i < len(image) and 0 <= j < len(image[0]):
                     results.add((i, j, color))
 
@@ -37,16 +47,16 @@ def loopPixels(edges, image):
         x, y = index
         if pixel == 255: 
             r, g, b = tuple(image[x, y])
-            color = (max(r-20,0), max(g-20,0), max(b-20,0))
+            color = (max(r-50,0), max(g-50,0), max(b-50,0)) if darken else (r,g,b)
             global_results.update(updateColors(x, y, color))
 
     return global_results
 
-def updateImage(filename):
+def updateImage(filename, size, darken=False):
     img = loadImage(filename)
     edges = getEdges(img)
 
-    results = loopPixels(edges, img)
+    results = loopPixels(edges, img, size, darken)
     for (i, j, color) in results: 
         img[i,j] = color
 
@@ -67,43 +77,28 @@ def sharpenImage(filename):
 def saveImage(filename, img):
     cv2.imwrite(IMG_DIR + filename, img)
 
+def saveAllImages(filename):
+    img = loadImage(IMG_DIR + ORIGINAL_DIR + filename)
+    new_img = updateImage(IMG_DIR + ORIGINAL_DIR + filename, (-1, 1))
+    darken_img = updateImage(IMG_DIR + ORIGINAL_DIR + filename, (-1, 1), darken=True)
+    kernel_img = sharpenImage(IMG_DIR + ORIGINAL_DIR + filename)
+    pure_darken_img = updateImage(IMG_DIR + ORIGINAL_DIR + filename, (0, 1), darken=True)
+
+    saveImage(IMG_DIR + NEW_DIR + 'new_' + filename, new_img)
+    saveImage(IMG_DIR + DARKEN_DIR + 'darken_' + filename, darken_img)
+    saveImage(IMG_DIR + KERNEL_DIR + 'kernel_' + filename, kernel_img)
+    saveImage(IMG_DIR + PURE_DARKEN_DIR + 'pure_darken_' + filename, pure_darken_img)
+
+    kernel_darken_img = updateImage(IMG_DIR + KERNEL_DIR + 'kernel_' + filename, (0, 1), darken=True)
+    darken_kernel_img = sharpenImage(IMG_DIR + PURE_DARKEN_DIR + 'pure_darken_' + filename)
+
+    saveImage(IMG_DIR + KERNEL_DARKEN_DIR + 'kernel_darken_' + filename, kernel_darken_img)
+    saveImage(IMG_DIR + DARKEN_KERNEL_DIR + 'darken_kernel_' + filename, darken_kernel_img)
+
 if __name__ == '__main__': 
-    shells = loadImage(IMG_DIR + 'shells.png')
-    new_shells = updateImage(IMG_DIR + 'shells.png')
-    kernel_shells = sharpenImage(IMG_DIR + 'shells.png')
+    images = ['shells.png', 'plane.png', 'wine.png', 'room.png', 'lot.png']
 
-    plane = loadImage(IMG_DIR + 'plane.png')
-    new_plane = updateImage(IMG_DIR + 'plane.png')
-    kernel_plane = sharpenImage(IMG_DIR + 'plane.png')
-
-    wine = loadImage(IMG_DIR + 'wine.png')
-    new_wine = updateImage(IMG_DIR + 'wine.png')
-    kernel_wine = sharpenImage(IMG_DIR + 'wine.png')
-
-    test = loadImage(IMG_DIR + 'test.png')
-    new_test = updateImage(IMG_DIR + 'test.png')
-    kernel_test = sharpenImage(IMG_DIR + 'test.png')
-
-    room = loadImage(IMG_DIR + 'room.png')
-    new_room = updateImage(IMG_DIR + 'room.png')
-    kernel_room = sharpenImage(IMG_DIR + 'room.png')
-
-    lot = loadImage(IMG_DIR + 'lot.png')
-    new_lot = updateImage(IMG_DIR + 'lot.png')
-    kernel_lot = sharpenImage(IMG_DIR + 'lot.png')
-
-    saveImage('darken_shells.png', new_shells)
-    saveImage('darken_plane.png', new_plane)
-    saveImage('darken_test.png', new_test)
-    saveImage('darken_wine.png', new_wine)
-    saveImage('darken_room.png', new_room)
-    saveImage('darken_lot.png', new_lot)
-
-    saveImage('kernel_shells.png', kernel_shells)
-    saveImage('kernel_plane.png', kernel_plane)
-    saveImage('kernel_test.png', kernel_test)
-    saveImage('kernel_wine.png', kernel_wine)
-    saveImage('kernel_room.png', kernel_room)
-    saveImage('kernel_lot.png', kernel_lot)
+    for img in images: 
+        saveAllImages(img)
 
 
