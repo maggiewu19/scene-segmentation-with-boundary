@@ -36,7 +36,8 @@ def loopPixels(edges, image):
     for index, pixel in np.ndenumerate(edges):
         x, y = index
         if pixel == 255: 
-            color = tuple(image[x, y])
+            r, g, b = tuple(image[x, y])
+            color = (max(r-20,0), max(g-20,0), max(b-20,0))
             global_results.update(updateColors(x, y, color))
 
     return global_results
@@ -51,31 +52,58 @@ def updateImage(filename):
 
     return img 
 
+def createFilter():
+    kernel = np.zeros((9,9), np.float32)
+    kernel[4,4] = 2.0
+
+    boxFilter = np.ones((9,9), np.float32) / 81.0 
+    return kernel - boxFilter
+
+def sharpenImage(filename):
+    img = loadImage(filename)
+    kernel = createFilter()
+    return cv2.filter2D(img, -1, kernel)
+
 def saveImage(filename, img):
     cv2.imwrite(IMG_DIR + filename, img)
 
 if __name__ == '__main__': 
     shells = loadImage(IMG_DIR + 'shells.png')
     new_shells = updateImage(IMG_DIR + 'shells.png')
+    kernel_shells = sharpenImage(IMG_DIR + 'shells.png')
 
     plane = loadImage(IMG_DIR + 'plane.png')
     new_plane = updateImage(IMG_DIR + 'plane.png')
+    kernel_plane = sharpenImage(IMG_DIR + 'plane.png')
 
     wine = loadImage(IMG_DIR + 'wine.png')
     new_wine = updateImage(IMG_DIR + 'wine.png')
+    kernel_wine = sharpenImage(IMG_DIR + 'wine.png')
 
     test = loadImage(IMG_DIR + 'test.png')
     new_test = updateImage(IMG_DIR + 'test.png')
+    kernel_test = sharpenImage(IMG_DIR + 'test.png')
 
     room = loadImage(IMG_DIR + 'room.png')
     new_room = updateImage(IMG_DIR + 'room.png')
+    kernel_room = sharpenImage(IMG_DIR + 'room.png')
 
-    saveImage('new_shells.png', new_shells)
-    saveImage('new_plane.png', new_plane)
-    saveImage('new_test.png', new_test)
-    saveImage('new_wine.png', new_wine)
-    saveImage('new_room.png', new_room)
+    lot = loadImage(IMG_DIR + 'lot.png')
+    new_lot = updateImage(IMG_DIR + 'lot.png')
+    kernel_lot = sharpenImage(IMG_DIR + 'lot.png')
 
+    saveImage('darken_shells.png', new_shells)
+    saveImage('darken_plane.png', new_plane)
+    saveImage('darken_test.png', new_test)
+    saveImage('darken_wine.png', new_wine)
+    saveImage('darken_room.png', new_room)
+    saveImage('darken_lot.png', new_lot)
 
+    saveImage('kernel_shells.png', kernel_shells)
+    saveImage('kernel_plane.png', kernel_plane)
+    saveImage('kernel_test.png', kernel_test)
+    saveImage('kernel_wine.png', kernel_wine)
+    saveImage('kernel_room.png', kernel_room)
+    saveImage('kernel_lot.png', kernel_lot)
 
 
