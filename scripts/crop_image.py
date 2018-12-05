@@ -2,13 +2,13 @@ from PIL import Image
 import os.path 
 
 IMG_DIR = '../images/'
-PREDICTED_DIR = 'predicted/'
+PREDICTED_DIR = 'image_predicted/'
 CROPPED_DIR = 'cropped/'
 
 TYPES = ['', 'new_', 'darken_', 'darken_kernel_', 'kernel_', 'kernel_darken_', 
 		'pure_darken_', 'contrast_50_', 'contrast_100_']
-IMAGES = ['bedroom.png', 'dentist_office.png', 'elevator.png', 'ice_skating.png',
-		'lake.png', 'lot.png', 'movie_theater.png', 'office.png', 'room.png']
+IMAGES = ['bread.png', 'house.png', 'kitchen_table.png', 'mountain.png',
+		'park.png', 'pool.png', 'shoes.png', 'sofa.png', 'street.png']
 
 def cropImage(img):
 	img = Image.open(img)
