@@ -13,7 +13,8 @@ NEW_DIR = 'new/'
 PURE_DARKEN_DIR = 'pure_darken/'
 DARKEN_KERNEL_DIR = 'darken_kernel/'
 KERNEL_DARKEN_DIR = 'kernel_darken/'
-CONTRAST_DIR = 'contrast/'
+CONTRAST_DIR_50 = 'contrast_50/'
+CONTRAST_DIR_100 = 'contrast_100/'
 
 # white: 255
 # black: 0 
@@ -92,12 +93,11 @@ def saveAllImages(filename):
     contrast_100_img = changeContrast(IMG_DIR + ORIGINAL_DIR + filename, 100)
 
     saveImage(IMG_DIR + NEW_DIR + 'new_' + filename, new_img)
-    saveImage(IMG_DIR + BLUR_DIR + 'blur_' + filename, blur_img)
     saveImage(IMG_DIR + DARKEN_DIR + 'darken_' + filename, darken_img)
     saveImage(IMG_DIR + KERNEL_DIR + 'kernel_' + filename, kernel_img)
     saveImage(IMG_DIR + PURE_DARKEN_DIR + 'pure_darken_' + filename, pure_darken_img)
-    saveImage(IMG_DIR + CONTRAST_DIR + 'contrast_50_' + filename, np.array(contrast_50_img))
-    saveImage(IMG_DIR + CONTRAST_DIR + 'contrast_100_' + filename, np.array(contrast_100_img))
+    saveImage(IMG_DIR + CONTRAST_DIR_50 + 'contrast_50_' + filename, np.array(contrast_50_img))
+    saveImage(IMG_DIR + CONTRAST_DIR_100 + 'contrast_100_' + filename, np.array(contrast_100_img))
 
 
     kernel_darken_img = updateImage(IMG_DIR + KERNEL_DIR + 'kernel_' + filename, (0, 1), darken=True)
@@ -115,11 +115,10 @@ def changeContrast(img, level):
     return img.point(contrast)
 
 if __name__ == '__main__': 
-    images = ['bedroom.jpg', 'classroom.jpg', 'dentist_office.jpg', 'elevator.jpg',
-              'lot.png', 'room.png', 'ice_skating.jpg', 'kitchen.jpg', 'lake.jpg',
-              'movie_theater.jpg', 'sail.jpg', 'office.jpg']
+    images = ['house.jpg', 'mountain.jpg', 'park.jpg', 'pool.jpg', 'bread.jpg', 'kitchen_table.jpg',
+              'shoes.jpg', 'sofa.jpg', 'street.jpg']
 
-    for img in images: 
+    for img in images:
         saveAllImages(img)
         print ("finish", img)
 
