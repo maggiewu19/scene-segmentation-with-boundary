@@ -5,7 +5,7 @@ IMG_DIR = '../images/'
 PREDICTED_DIR = 'predicted/'
 CROPPED_DIR = 'cropped/'
 
-TYPES = ['new_', 'darken_', 'darken_kernel_', 'kernel_', 'kernel_darken_', 
+TYPES = ['', 'new_', 'darken_', 'darken_kernel_', 'kernel_', 'kernel_darken_', 
 		'pure_darken_', 'contrast_50_', 'contrast_100_']
 IMAGES = ['bedroom.png', 'dentist_office.png', 'elevator.png', 'ice_skating.png',
 		'lake.png', 'lot.png', 'movie_theater.png', 'office.png', 'room.png']
