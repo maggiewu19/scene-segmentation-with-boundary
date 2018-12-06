@@ -85,8 +85,8 @@ def saveImage(filename, img):
 def saveAllImages(filename):
     img = loadImage(IMG_DIR + ORIGINAL_DIR + filename)
     
-    new_img = updateImage(IMG_DIR + ORIGINAL_DIR + filename, (-1, 1))
-    darken_img = updateImage(IMG_DIR + ORIGINAL_DIR + filename, (-1, 1), darken=True)
+    new_img = updateImage(IMG_DIR + ORIGINAL_DIR + filename, (-1, 2))
+    darken_img = updateImage(IMG_DIR + ORIGINAL_DIR + filename, (-1, 2), darken=True)
     kernel_img = sharpenImage(IMG_DIR + ORIGINAL_DIR + filename)
     pure_darken_img = updateImage(IMG_DIR + ORIGINAL_DIR + filename, (0, 1), darken=True)
     contrast_50_img = changeContrast(IMG_DIR + ORIGINAL_DIR + filename, 50)
