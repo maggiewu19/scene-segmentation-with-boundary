@@ -115,11 +115,15 @@ def changeContrast(img, level):
     return img.point(contrast)
 
 if __name__ == '__main__': 
-    images = ['house.jpg', 'mountain.jpg', 'park.jpg', 'pool.jpg', 'bread.jpg', 'kitchen_table.jpg',
-              'shoes.jpg', 'sofa.jpg', 'street.jpg']
+    # images = ['house.jpg', 'mountain.jpg', 'park.jpg', 'pool.jpg', 'bread.jpg', 'kitchen_table.jpg',
+    #           'shoes.jpg', 'sofa.jpg', 'street.jpg']
 
-    for img in images:
-        saveAllImages(img)
-        print ("finish", img)
+    # for img in images:
+    #     saveAllImages(img)
+    #     print ("finish", img)
 
+    pool = IMG_DIR + ORIGINAL_DIR + 'pool.jpg'
+    img = loadImage(pool)
+    edges = getEdges(img)
+    plotImage(img, edges)
 

@@ -5,6 +5,7 @@ from PIL import Image
 from matplotlib import pyplot as plt
 from skimage.measure import compare_ssim as ssim
 from skimage import data, img_as_float 
+from edge_detection import * 
 
 IMG_DIR = '../images/'
 CROPPED_DIR = 'cropped/'
@@ -123,7 +124,41 @@ def plotErrorStd(avg, sd, ylabel, title):
     # Show the figure
     plt.tight_layout()
     plt.show()
-    
+
+def cropImage(img, w_low, h_low, w_high, h_high):
+    img = Image.open(img)
+    w, h = img.size 
+    cropped_img = img.crop((w_low, h_low, w_high, h_high))
+    return cropped_img
+
+def showImage(img): 
+    plt.imshow(img, cmap = 'gray')
+    plt.xticks([]), plt.yticks([])
+
+    plt.show()
+
+def testImage(filename, t):
+    GROUND_TRUTH_FOLDER = IMG_DIR + GROUND_TRUTH_DIR
+    IMG_FOLDER = IMG_DIR + CROPPED_DIR
+
+    w_low, h_low, w_high, h_high = 10, 210, 680, 390
+
+    baseline = cropImage(IMG_FOLDER + filename, w_low, h_low, w_high, h_high)
+    test = cropImage(IMG_FOLDER + t + filename, w_low, h_low, w_high, h_high)
+    truth = cropImage(GROUND_TRUTH_FOLDER + filename, w_low, h_low, w_high, h_high)
+
+    showImage(truth)
+    showImage(baseline)
+    showImage(test)
+
+    baseline_mse = pixel_wise_mse(baseline, truth)
+    img_mse = pixel_wise_mse(test, truth)
+
+    baseline_val = ssim_measure(baseline, truth)
+    img_val = ssim_measure(test, truth)
+
+    print (baseline_mse, img_mse)
+    print (baseline_val, img_val)
 
 if __name__ == '__main__':
     IMAGES = ['bread.png', 'house.png', 'kitchen_table.png', 'mountain.png',
@@ -154,5 +189,9 @@ if __name__ == '__main__':
     ylabel = '0/1 Loss'
     title = '0/1 Loss vs. Techniques'
     plotErrorStd(zero_one_avg, zero_one_sd, ylabel, title)
+
+    filename = 'pool.png'
+    t = 'pure_darken_'
+    testImage(filename, t)
 
 
